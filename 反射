@@ -1,0 +1,235 @@
+
+package 练习;
+
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+class Student {
+    //私有属性name
+    private String name = "bit";
+    //公有属性age
+    public int age = 18;
+
+    //不带参数的构造方法
+    public Student() {
+        System.out.println("Student()");
+    }
+
+    private Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+        System.out.println("Student(String,name)");
+    }
+
+    private void eat() {
+        System.out.println("i am eat");
+    }
+
+    public void sleep() {
+        System.out.println("i am pig");
+    }
+
+    private void function(String str) {
+        System.out.println(str);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
+public class TestReflection {
+
+
+    //创建对象
+    public static void reflectNewInstanse() {
+        Class<?> c1=null;
+
+        try {
+            c1=Class.forName("练习.Student");
+
+            //Student student=new Student();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        Class<?> c2= Student.class;
+
+        Student student=new Student();
+        Class<?> c3=student.getClass();
+
+        //System.out.println(c1.equals(c2));
+    }
+
+    // 反射私有的构造方法 屏蔽内容为获得公有的构造方法
+    public static void reflectPrivateConstrcter() {
+
+        Class<?> c1=null;
+
+        try {
+            c1=Class.forName("练习.Student");
+
+            Student student=(Student) c1.newInstance();
+
+            //获得private方法权限
+            Constructor<?> constructor= c1.getDeclaredConstructor(String.class,int.class);
+            constructor.setAccessible(true);
+
+            //可以用方法调用了
+            Student student1=(Student) constructor.newInstance("yuanye",18);
+            System.out.println(student1);
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // 反射私有属性
+    public static void reflectPrivateField() {
+
+        Class<?> c1=null;
+        try {
+            c1=Class.forName("练习.Student");
+            //开权限
+            Field field=c1.getDeclaredField("name");
+            field.setAccessible(true);
+
+
+            Student student=(Student) c1.newInstance();
+            //field.set(student,"yuanye");//要改里面的参数就用set方法改
+            System.out.println(student);
+
+            String str=(String)field.get(student);
+            System.out.println(str);
+
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    // 反射私有方法
+    public static void reflectPriveatMethod(){
+        Class<?> c1=null;
+
+        try {
+            c1=Class.forName("练习.Student");
+            Method method=c1.getDeclaredMethod("function", String.class);
+            method.setAccessible(true);
+
+            Student student=(Student)c1.newInstance();
+            System.out.println(student);
+
+            method.invoke(student,"func是一个参数");
+
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void main(String[] args) {
+        reflectNewInstanse();
+        reflectPrivateConstrcter();
+        System.out.println("===========================");
+        reflectPrivateField();
+        reflectPriveatMethod();
+
+    }
+
+
+
+
+
+
+    public static void main1(String[] args) {
+
+        Class<?> c1=null;
+        //1、获得class的对象的student类
+        try {
+            c1=Class.forName("练习.Student");//用的最多的
+
+            //Student student=new Student();
+            Student student=(Student) c1.newInstance();//!!!!!!!!!
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //2、获得class的对象的student类
+        Class<?> c2= Student.class;
+
+        //3.获得class的对象的student类
+        Student student=new Student();
+        Class<?> c3=student.getClass();
+
+        System.out.println(c1.equals(c2));
+        System.out.println(c1==c3);
+        System.out.println(c2==c3);
+
+
+    }
+
+
+
+    // 反射私有的构造方法 屏蔽内容为获得公有的构造方法
+    public static void reflectPrivateConstructor() throws NoSuchMethodException {
+
+        Class<?> c1=null;
+        try {
+            c1=Class.forName("练习.Student");
+
+            //Student student=new Student();
+            Student student=(Student) c1.newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+        Constructor<?> constructor= c1.getDeclaredConstructor(String.class,int.class);
+
+
+
+    }
+}
