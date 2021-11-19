@@ -1,0 +1,32 @@
+ public static int BF(String str,String sub) {
+        if(str==null || sub==null) {
+            return -1;
+        }
+        int lenStr=str.length();
+        int lenSub=sub.length();
+        if(lenStr==0 || lenSub==0) {
+            return -1;
+        }
+        int i=0;
+        int j=0;
+        while(i<lenStr && j<lenSub) {
+            if(str.charAt(i)==sub.charAt(j)) {
+                i++;
+                j++;
+            }else {
+                i=i-j+1;
+                j=0;
+            }
+        }
+        if(j>=lenSub) {//注意 =
+            return i-j;
+        }
+        return -1;
+    }
+    public static void main1(String[] args) {
+        System.out.println(BF("kdjfoeiaw","jfoe"));//2
+        System.out.println(BF("kdjfoeiaw","kdjf"));//0
+        System.out.println(BF("kdjfoeiaw","jfoeo"));//-1
+
+    }
+}
